@@ -1,0 +1,244 @@
+services:
+  prime:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30303
+      - HTTP_PORT=8546
+      - WS_PORT=8547
+      - PUB_IP=${PUB_IP}
+    build: .
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --sub.urls ws://cyprus:8579,ws://paxos:8581,ws://hydra:8583'
+    ports:
+      - "30303"
+      - "8547"
+      - "8548"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
+
+  cyprus:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30304
+      - HTTP_PORT=8578
+      - WS_PORT=8579
+      - PUB_IP=${PUB_IP}
+    build: .
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT  --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --region 0 --sub.urls ws://cyprus1:8611,ws://cyprus2:8643,ws://cyprus3:8675 --dom.url ws://prime:8547'
+    ports:
+      - "30304"
+      - "8578"
+      - "8579"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
+
+  paxos:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30305
+      - HTTP_PORT=8580
+      - WS_PORT=8581
+      - PUB_IP=${PUB_IP}
+    build: .
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --region 1 --sub.urls ws://paxos1:8613,ws://paxos2:8645,ws://paxos3:8677 --dom.url ws://prime:8547'
+    ports:
+      - "30305"
+      - "8580"
+      - "8581"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
+
+  hydra:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30306
+      - HTTP_PORT=8582
+      - WS_PORT=8583
+      - PUB_IP=${PUB_IP}
+    build: .
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --region 2 --sub.urls ws://hydra1:8615,ws://hydra2:8647,ws://hydra3:8679 --dom.url ws://prime:8547'
+    ports:
+      - "30306"
+      - "8582"
+      - "8583"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
+
+  cyprus1:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30307
+      - HTTP_PORT=8610
+      - WS_PORT=8611
+      - COINBASE_ADDR=${COINBASE_ADDR}
+      - PUB_IP=${PUB_IP}
+    build: .
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --miner.etherbase $$COINBASE_ADDR --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --region 0 --zone 0 --dom.url ws://cyprus:8579'
+    ports:
+      - "30307"
+      - "8610"
+      - "8611"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
+
+  cyprus2:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30308
+      - HTTP_PORT=8542
+      - WS_PORT=8643
+      - COINBASE_ADDR=${COINBASE_ADDR}
+      - PUB_IP=${PUB_IP}
+    build: .
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --miner.etherbase $$COINBASE_ADDR --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --region 0 --zone 1 --dom.url ws://cyprus:8579'
+    ports:
+      - "30308"
+      - "8542"
+      - "8642"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
+
+  cyprus3:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30309
+      - HTTP_PORT=8674
+      - WS_PORT=8675
+      - COINBASE_ADDR=${COINBASE_ADDR}
+      - PUB_IP=${PUB_IP}
+    build: .
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --miner.etherbase $$COINBASE_ADDR --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --region 0 --zone 2 --dom.url ws://cyprus:8579'
+    ports:
+      - "30309"
+      - "8674"
+      - "8675"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
+
+  paxos1:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30310
+      - HTTP_PORT=8512
+      - WS_PORT=8613
+      - COINBASE_ADDR=${COINBASE_ADDR}
+      - PUB_IP=${PUB_IP}
+    build: .
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --miner.etherbase $$COINBASE_ADDR --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --region 1 --zone 0 --dom.url ws://paxos:8581'
+    ports:
+      - "30310"
+      - "8512"
+      - "8613"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
+
+  paxos2:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30311
+      - HTTP_PORT=8544
+      - WS_PORT=8645
+      - COINBASE_ADDR=${COINBASE_ADDR}
+      - PUB_IP=${PUB_IP}
+    build: .
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --miner.etherbase $$COINBASE_ADDR --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --region 1 --zone 1 --dom.url ws://paxos:8581'
+    ports:
+      - "30311"
+      - "8544"
+      - "8645"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
+
+  paxos3:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30312
+      - HTTP_PORT=8576
+      - WS_PORT=8677
+      - COINBASE_ADDR=${COINBASE_ADDR}
+      - PUB_IP=${PUB_IP}
+    build: .
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --miner.etherbase $$COINBASE_ADDR --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --region 1 --zone 2 --dom.url ws://paxos:8581'
+    ports:
+      - "30312"
+      - "8576"
+      - "8677"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
+
+  hydra1:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30313
+      - HTTP_PORT=8614
+      - WS_PORT=8615
+      - COINBASE_ADDR=${COINBASE_ADDR}
+      - PUB_IP=${PUB_IP}
+    build: .
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --miner.etherbase $$COINBASE_ADDR --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --region 2 --zone 0 --dom.url ws://hydra:8583'
+    ports:
+      - "30313"
+      - "8614"
+      - "8615"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
+
+  hydra2:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30314
+      - HTTP_PORT=8646
+      - WS_PORT=8647
+      - COINBASE_ADDR=${COINBASE_ADDR}
+      - PUB_IP=${PUB_IP}
+    build: .
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --miner.etherbase $$COINBASE_ADDR --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --region 2 --zone 1 --dom.url ws://hydra:8583'
+    ports:
+      - "30314"
+      - "8646"
+      - "8647"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
+
+  hydra3:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30315
+      - HTTP_PORT=8678
+      - WS_PORT=8679
+      - COINBASE_ADDR=${COINBASE_ADDR}
+      - PUB_IP=${PUB_IP}
+    build: .
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --miner.etherbase $$COINBASE_ADDR --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --region 2 --zone 2 --dom.url ws://hydra:8583'
+    ports:
+      - "30315"
+      - "8678"
+      - "8679"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
+
