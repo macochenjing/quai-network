@@ -1,0 +1,19 @@
+services:
+  cyprus2:
+    image: "macochen/quai-network:latest"
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30308
+      - HTTP_PORT=8542
+      - WS_PORT=8643
+      - COINBASE_ADDR=${COINBASE_ADDR}
+      - PUB_IP=${PUB_IP}
+    command: sh -c './build/bin/go-quai --$$NETWORK --slices "$$SLICES" --syncmode full --http --http.vhosts=* --ws --miner.etherbase $$COINBASE_ADDR --http.addr 0.0.0.0 --http.api eth,net,web3,quai,txpool,debug --ws.addr 0.0.0.0 --ws.api eth,net,web3,quai,txpool,debug --port $$TCP_PORT --http.port $$HTTP_PORT --nat extip:$$PUB_IP --ws.port $$WS_PORT --ws.origins=* --http.corsdomain=* --gcmode archive --nonce $$NONCE --region 0 --zone 1 --dom.url ws://cyprus:8579'
+    ports:
+      - "30308"
+      - "8542"
+      - "8642"
+    volumes:
+      - ~/.quai:/root/.quai
+      - ~/nodelogs:/go-quai/nodelogs
